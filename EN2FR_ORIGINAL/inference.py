@@ -272,30 +272,15 @@ def initialize_initial_state():
         return [tf.zeros((BATCH_SIZE, rnn_units)), tf.zeros((BATCH_SIZE, rnn_units))]
 
 
-"""
-epochs = 1
-for i in range(1, epochs+1):
-    encoder_initial_cell_state = initialize_initial_state()
-    total_loss = 0.0
-    for ( batch , (input_batch, output_batch)) in enumerate(dataset.take(steps_per_epoch)):
-        batch_loss = train_step(input_batch, output_batch, encoder_initial_cell_state)
-        total_loss += batch_loss
-        if (batch+1)%20 == 0:
-            print("total loss: {} epoch {} batch {} ".format(batch_loss.numpy(), i, batch+1))
-            checkpoint.save(file_prefix = chkpoint_prefix)
-"""
-# epochs = 1
-# for i in range(1, epochs+1):
-#     encoder_initial_cell_state = initialize_initial_state()
-#     for ( batch , (input_batch, output_batch)) in enumerate(dataset.take(steps_per_epoch)):
-#         batch_loss = train_step(input_batch, output_batch, encoder_initial_cell_state)
-#         break
-#     break
-# checkpoint.restore(tf.train.latest_checkpoint(checkpointdir))
+encoder_initial_cell_state = initialize_initial_state()
+for ( batch , (input_batch, output_batch)) in enumerate(dataset.take(steps_per_epoch)):
+    batch_loss = train_step(input_batch, output_batch, encoder_initial_cell_state)
+    break
+checkpoint.restore(tf.train.latest_checkpoint(checkpointdir))
 
 
 #if trained in same session else use checkpoint variable
-#decoder_embedding_matrix = tf.train.load_variable(checkpointdir, 'decoderNetwork/decoder_embedding/embeddings/.ATTRIBUTES/VARIABLE_VALUE')
+# decoder_embedding_matrix = tf.train.load_variable(checkpointdir, 'decoderNetwork/decoder_embedding/embeddings/.ATTRIBUTES/VARIABLE_VALUE')
 decoder_embedding_matrix = decoderNetwork.decoder_embedding.variables[0] 
 print(decoderNetwork.decoder_embedding.variables[0].shape)
 
